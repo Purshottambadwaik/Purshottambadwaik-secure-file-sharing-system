@@ -1,4 +1,12 @@
+from datetime import datetime
+import pytz
 from config.db_config import db
+
+# IST timezone
+IST = pytz.timezone('Asia/Kolkata')
+
+def ist_time():
+    return datetime.now(IST)
 
 class File(db.Model):
 
@@ -11,6 +19,11 @@ class File(db.Model):
         db.ForeignKey('user.id'),
         nullable=False
     )
+    
+    uploaded_at = db.Column(
+    db.DateTime,
+    default=ist_time
+)
 
     def __repr__(self):
         return f"<File {self.filename}>"

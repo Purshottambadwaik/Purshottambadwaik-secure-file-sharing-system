@@ -12,62 +12,92 @@
   </head>
 
   <body>
-    <div class="container">
-      <h1>Welcome {{ username }}</h1>
+    <div class="dashboard-container">
 
-      <h3>User Dashboard</h3>
-{% with messages = get_flashed_messages() %}
 
-    {% if messages %}
+      <!-- Header -->
+      <!-- Top Navbar -->
+<div class="top-navbar">
 
-        {% for message in messages %}
+    <h2>Secure File Sharing System</h2>
 
-            <p>{{ message }}</p>
-
-        {% endfor %}
-
-    {% endif %}
-
-{% endwith %}
-
-     <form action="/upload" method="POST" enctype="multipart/form-data">
-
-    <input type="file" name="file">
-
-    <br><br>
-
-    <button type="submit">Upload File</button>
-<br><br>
-
-<h3>Uploaded Files</h3>
-
-<ul>
-
-    {% for file in files %}
-
-       <li>
-
-    {{ file.filename }}
-
-    <a href="{{ url_for('download_file', filename=file.filename) }}">
-       <button type="button">Download</button>
+    <a href="/logout">
+        <button class="logout-top-btn">
+            Logout
+        </button>
     </a>
 
+</div>
 
-    <a href="{{ url_for('delete_file', filename=file.filename) }}">
-        <button type="button">Delete</button>
-</li>
+<!-- Welcome Section -->
+<div class="welcome-section">
 
-    {% endfor %}
+    <h1>Welcome {{ username }} 👋</h1>
 
-</ul>
-</form>
-      <br /><br />
+    <p>
+        Manage your files securely and efficiently
+    </p>
 
-      <a href="/logout">
-        <button>Logout</button>
-      </a>
+</div>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for
+      message in messages %}
+
+      <div class="flash-message">{{ message }}</div>
+
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- Upload Section -->
+      <div class="upload-section">
+        <form action="/upload"
+      method="POST"
+      enctype="multipart/form-data">
+
+    <div class="upload-box">
+
+        <input type="file" name="file">
+
+        <button type="submit">
+            Upload File
+        </button>
+
     </div>
+
+</form>
+      </div>
+
+      <!-- Files Section -->
+      <div class="files-section">
+        <h2>Uploaded Files</h2>
+
+        {% for file in files %}
+
+        <div class="file-card">
+          <div class="file-info">
+            <h3>{{ file.filename }}</h3>
+
+            <small>
+              Uploaded: {{ file.uploaded_at.strftime('%d %b %Y, %I:%M %p') }}
+              IST
+            </small>
+          </div>
+
+          <div class="file-actions">
+            <a href="{{ url_for('download_file', filename=file.filename) }}">
+              <button type="button">Download</button>
+            </a>
+
+            <a href="{{ url_for('delete_file', filename=file.filename) }}">
+              <button type="button" class="delete-btn">Delete</button>
+            </a>
+          </div>
+        </div>
+
+        {% endfor %}
+      </div>
+
     
+    </div>
   </body>
 </html>
