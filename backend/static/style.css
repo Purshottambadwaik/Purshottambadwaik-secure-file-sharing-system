@@ -438,3 +438,42 @@ flex-wrap: wrap;
 
     color: #2563eb;
 }
+
+/* Recent Uploads */
+.recent-section {
+
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    margin-bottom: 30px;
+
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.08);
+}
+
+.recent-section h2 {
+
+    margin-bottom: 20px;
+}
+
+.recent-item {
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #eee;
+
+    font-size: 15px;
+}
+
+.recent-item:last-child {
+
+    border-bottom: none;
+}
+.or-text {
+
+    color: #777;
+
+    font-size: 14px;
+}

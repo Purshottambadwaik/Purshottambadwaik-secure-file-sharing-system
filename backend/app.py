@@ -183,6 +183,13 @@ def dashboard():
         file.file_size or 0
         for file in files
     )
+    
+        # Recent uploads
+    recent_files = File.query.filter_by(
+        user_id=session['user_id']
+    ).order_by(
+        File.uploaded_at.desc()
+    ).limit(5).all()
 
     return render_template(
         'dashboard.html',
@@ -191,7 +198,8 @@ def dashboard():
         total_files=total_files,
         total_storage=total_storage,
         format_file_size=format_file_size,
-        get_file_icon=get_file_icon
+        get_file_icon=get_file_icon,
+        recent_files=recent_files
     )
     return redirect('/login')
 

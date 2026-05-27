@@ -11,25 +11,6 @@
     />
   </head>
 
-<script>
-
-    const fileInput =
-        document.getElementById('file-input');
-
-    const selectedFile =
-        document.getElementById('selected-file');
-
-    fileInput.addEventListener('change', () => {
-
-        if (fileInput.files.length > 0) {
-
-            selectedFile.textContent =
-                "Selected: " +
-                fileInput.files[0].name;
-        }
-    });
-
-</script>
 
   <body>
     <div class="dashboard-container">
@@ -73,6 +54,26 @@
         </div>
       </div>
 
+<!-- Recent Uploads -->
+<div class="recent-section">
+
+    <h2>Recent Uploads</h2>
+
+    {% for recent in recent_files %}
+
+        <div class="recent-item">
+
+            <span>
+                {{ get_file_icon(recent.filename) }}
+                {{ recent.filename }}
+            </span>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
       <!-- Upload Form -->
   <form
       action="/upload"
@@ -86,11 +87,8 @@
               Drag & Drop Files Here
           </p>
 
-          <p id="selected-file">
-              No file selected
-          </p>
-
-          <p>or</p>
+          
+<span class="or-text">or</span>
 
           <input
               type="file"
