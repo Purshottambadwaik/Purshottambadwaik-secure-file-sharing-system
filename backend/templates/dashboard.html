@@ -11,34 +11,44 @@
     />
   </head>
 
+<script>
+
+    const fileInput =
+        document.getElementById('file-input');
+
+    const selectedFile =
+        document.getElementById('selected-file');
+
+    fileInput.addEventListener('change', () => {
+
+        if (fileInput.files.length > 0) {
+
+            selectedFile.textContent =
+                "Selected: " +
+                fileInput.files[0].name;
+        }
+    });
+
+</script>
+
   <body>
     <div class="dashboard-container">
-
-
       <!-- Header -->
       <!-- Top Navbar -->
-<div class="top-navbar">
+      <div class="top-navbar">
+        <h2>Secure File Sharing System</h2>
 
-    <h2>Secure File Sharing System</h2>
+        <a href="/logout">
+          <button class="logout-top-btn">Logout</button>
+        </a>
+      </div>
 
-    <a href="/logout">
-        <button class="logout-top-btn">
-            Logout
-        </button>
-    </a>
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <h1>Welcome {{ username }} 👋</h1>
 
-</div>
-
-<!-- Welcome Section -->
-<div class="welcome-section">
-
-    <h1>Welcome {{ username }} 👋</h1>
-
-    <p>
-        Manage your files securely and efficiently
-    </p>
-
-</div>
+        <p>Manage your files securely and efficiently</p>
+      </div>
 
       <!-- Flash Messages -->
       {% with messages = get_flashed_messages() %} {% if messages %} {% for
@@ -48,39 +58,141 @@
 
       {% endfor %} {% endif %} {% endwith %}
 
-      <!-- Upload Section -->
-      <div class="upload-section">
-        <form action="/upload"
-      method="POST"
-      enctype="multipart/form-data">
+      <!-- Dashboard Stats -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <h3>Total Files</h3>
 
-    <div class="upload-box">
+          <p>{{ total_files }}</p>
+        </div>
 
-        <input type="file" name="file">
+        <div class="stat-card">
+          <h3>Storage Used</h3>
 
-        <button type="submit">
-            Upload File
-        </button>
-
-    </div>
-
-</form>
+          <p>{{ format_file_size(total_storage) }}</p>
+        </div>
       </div>
+
+      <!-- Upload Form -->
+  <form
+      action="/upload"
+      method="POST"
+      enctype="multipart/form-data"
+  >
+
+      <div class="upload-box" id="drop-zone">
+
+          <p class="drop-text">
+              Drag & Drop Files Here
+          </p>
+
+          <p id="selected-file">
+              No file selected
+          </p>
+
+          <p>or</p>
+
+          <input
+              type="file"
+              name="file"
+              id="file-input"
+          >
+
+          <button type="submit">
+              Upload File
+          </button>
+
+      </div>
+
+  </form>
 
       <!-- Files Section -->
       <div class="files-section">
-        <h2>Uploaded Files</h2>
+        <!-- Search + Sort Form -->
+        <form action="/dashboard" method="GET" class="search-form">
+          <input
+            type="text"
+            name="search"
+            placeholder="Search files..."
+            value="{{ request.args.get('search', '') }}"
+          />
 
-        {% for file in files %}
+          <!-- Sort Dropdown -->
+          <select name="sort">
+            <option value="">Sort By</option>
+
+           <option
+    value="latest"
+    {% if request.args.get('sort') == 'latest' %}
+        selected
+    {% endif %}
+>
+    Latest
+</option>
+
+            <option
+    value="oldest"
+    {% if request.args.get('sort') == 'oldest' %}
+        selected
+    {% endif %}
+>
+    Oldest
+</option>
+
+            <option
+    value="largest"
+    {% if request.args.get('sort') == 'largest' %}
+        selected
+    {% endif %}
+>
+    Largest
+</option>
+
+            <option
+    value="smallest"
+    {% if request.args.get('sort') == 'smallest' %}
+        selected
+    {% endif %}
+>
+    Smallest
+</option>
+
+            <option
+    value="az"
+    {% if request.args.get('sort') == 'az' %}
+        selected
+    {% endif %}
+>
+    A-Z
+</option>
+          </select>
+
+          <button type="submit">Apply</button>
+
+          <a href="/dashboard">
+            <button type="button">Clear</button>
+          </a>
+        </form>
+
+        <h2>Uploaded Files ({{ files|length }})</h2>
+
+        {% if files|length == 0 %}
+
+        <p>No matching files found.</p>
+
+        {% endif %} {% for file in files %}
 
         <div class="file-card">
           <div class="file-info">
-            <h3>{{ file.filename }}</h3>
+            <h3>{{ get_file_icon(file.filename) }} {{ file.filename }}</h3>
 
-            <small>
-              Uploaded: {{ file.uploaded_at.strftime('%d %b %Y, %I:%M %p') }}
-              IST
-            </small>
+            <div class="file-meta">
+              <span> 📦 {{ format_file_size(file.file_size) }} </span>
+
+              <span>
+                🕒 {{ file.uploaded_at.strftime('%d %b %Y, %I:%M %p') }} IST
+              </span>
+            </div>
           </div>
 
           <div class="file-actions">
@@ -96,8 +208,6 @@
 
         {% endfor %}
       </div>
-
-    
     </div>
   </body>
 </html>

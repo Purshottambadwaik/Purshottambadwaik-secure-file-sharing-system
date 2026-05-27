@@ -1,26 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Sharing System</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secure File Sharing</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
 </head>
 
 <body>
 
-    <div class="container">
-        <h1>Welcome to File Sharing System</h1>
+    <div class="auth-container">
 
-      <a href="/login">
-    <button>Login</button>
-</a>
+        <div class="auth-card">
 
-<a href="/register">
-    <button>Register</button>
-</a>
+            <h1>🔒 Secure File Sharing</h1>
+
+            <p
+                style="
+                    margin-top: 10px;
+                    margin-bottom: 30px;
+                    color: #666;
+                "
+            >
+                Store and manage your files securely
+            </p>
+
+            <a href="/login">
+
+                <button
+                    style="
+                        width: 100%;
+                        margin-bottom: 15px;
+                    "
+                >
+                    Login
+                </button>
+
+            </a>
+
+            <a href="/register">
+
+                <button
+                    style="
+                        width: 100%;
+                        background: #16a34a;
+                    "
+                >
+                    Register
+                </button>
+
+            </a>
+
+        </div>
+
     </div>
 
 </body>
+
 </html>

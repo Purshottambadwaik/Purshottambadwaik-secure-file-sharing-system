@@ -1,6 +1,6 @@
 from datetime import datetime
 import pytz
-from config.db_config import db
+from backend.config.db_config import db
 
 # IST timezone
 IST = pytz.timezone('Asia/Kolkata')
@@ -23,6 +23,10 @@ class File(db.Model):
     uploaded_at = db.Column(
     db.DateTime,
     default=ist_time
+)
+    
+    file_size = db.Column(
+    db.Integer
 )
 
     def __repr__(self):

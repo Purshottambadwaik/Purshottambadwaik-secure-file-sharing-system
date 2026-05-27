@@ -1,4 +1,4 @@
-from config.db_config import db
+from backend.config.db_config import db
 
 class User(db.Model):
 

@@ -1,14 +1,16 @@
 from fileinput import filename
+from importlib.metadata import files
 import os
 
 from flask import Flask, render_template
-from config.db_config import db
-from models.user_model import User
-from models.file_model import File
+from backend.config.db_config import db
+from backend.models.user_model import User
+from backend.models.file_model import File
 from flask import Flask, render_template, request, redirect, session, send_from_directory , flash
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
+from flask_migrate import Migrate
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
@@ -37,6 +39,38 @@ def allowed_file(filename):
         in ALLOWED_EXTENSIONS
     )
     
+      # Convert bytes to readable format
+def format_file_size(size):
+
+    if size is None:
+        return "Unknown"
+
+    if size < 1024:
+        return f"{size} B"
+
+    elif size < 1024 * 1024:
+        return f"{round(size / 1024, 2)} KB"
+
+    else:
+        return f"{round(size / (1024 * 1024), 2)} MB"
+    
+    # Return icon based on file type
+def get_file_icon(filename):
+
+    extension = filename.rsplit('.', 1)[1].lower()
+
+    if extension == 'pdf':
+        return '📄'
+
+    elif extension in ['png', 'jpg', 'jpeg']:
+        return '🖼️'
+
+    elif extension == 'txt':
+        return '📝'
+
+    else:
+        return '📁'
+    
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 
 db_path = os.path.join(BASE_DIR, 'database', 'database.db')
@@ -47,6 +81,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize Database
 db.init_app(app)
+migrate = Migrate(app, db)
 
 # Home Page
 @app.route('/')
@@ -87,19 +122,77 @@ def dashboard():
 
         username = session['username']
 
-       
-        # Get current user's files from database
-    files = File.query.filter_by(
+        
+        # Get search query
+    search_query = request.args.get('search')
+    
+        # Get sort option
+    sort_option = request.args.get('sort')
+
+    # Base query
+    query = File.query.filter_by(
         user_id=session['user_id']
-    ).all()
+    )
 
+    # Apply search filter
+    if search_query:
 
-    return render_template(
-            'dashboard.html',
-            username=username,
-            files=files
+        query = query.filter(
+            File.filename.contains(search_query)
         )
 
+    # Apply sorting
+    if sort_option == 'latest':
+
+        query = query.order_by(
+            File.uploaded_at.desc()
+        )
+
+    elif sort_option == 'oldest':
+
+        query = query.order_by(
+            File.uploaded_at.asc()
+        )
+
+    elif sort_option == 'largest':
+
+        query = query.order_by(
+            File.file_size.desc()
+        )
+
+    elif sort_option == 'smallest':
+
+        query = query.order_by(
+            File.file_size.asc()
+        )
+
+    elif sort_option == 'az':
+
+        query = query.order_by(
+            File.filename.asc()
+        )
+
+    # Get files
+    files = query.all()
+
+    # Total files
+    total_files = len(files)
+    
+        # Total storage used
+    total_storage = sum(
+        file.file_size or 0
+        for file in files
+    )
+
+    return render_template(
+        'dashboard.html',
+        username=username,
+        files=files,
+        total_files=total_files,
+        total_storage=total_storage,
+        format_file_size=format_file_size,
+        get_file_icon=get_file_icon
+    )
     return redirect('/login')
 
 # Logout Route
@@ -117,6 +210,7 @@ def too_large(e):
 
     flash("File is too large (Max 10 MB)")
     return redirect('/dashboard')
+
 
 # Upload Route
 @app.route('/upload', methods=['POST'])
@@ -142,6 +236,8 @@ def upload_file():
         flash("File type not allowed")
         return redirect('/dashboard')
     
+        
+    
     # Create user-specific folder
     user_folder = os.path.join(
         UPLOAD_FOLDER,
@@ -151,15 +247,23 @@ def upload_file():
     # Create folder if not exists
     os.makedirs(user_folder, exist_ok=True)
 
-    # Save file inside user folder
-    file.save(
-        os.path.join(user_folder, filename)
+        # File path
+    file_path = os.path.join(
+        user_folder,
+        filename
     )
+
+    # Save file
+    file.save(file_path)
+
+    # Get file size in bytes
+    file_size = os.path.getsize(file_path)
     
     # Save file metadata to database
     new_file = File(
         filename=filename,
-        user_id=session['user_id']
+        user_id=session['user_id'],
+        file_size=file_size
     )
 
     db.session.add(new_file)
