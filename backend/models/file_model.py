@@ -25,9 +25,16 @@ class File(db.Model):
     default=ist_time
 )
     
+    
     file_size = db.Column(
     db.Integer
 )
+    
+    is_deleted = db.Column(
+    db.Boolean,
+    default=False
+)
+    
 
     def __repr__(self):
         return f"<File {self.filename}>"

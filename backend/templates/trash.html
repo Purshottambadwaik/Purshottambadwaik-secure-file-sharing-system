@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Trash</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="dashboard-container">
+      <h1>Trash</h1>
+
+      <a href="/dashboard">
+        <button>Back to Dashboard</button>
+      </a>
+
+      <br /><br />
+
+      {% if trashed_files %} {% for file in trashed_files %}
+
+      <div class="file-card">
+        <h3>{{ get_file_icon(file.filename) }} {{ file.filename }}</h3>
+
+        <br />
+
+        <a href="/restore/{{ file.id }}">
+          <button>Restore</button>
+        </a>
+
+        <a
+          href="/permanent-delete/{{ file.id }}"
+          onclick="return confirm('Permanently delete this file?');"
+        >
+          <button class="delete-btn">Delete Permanently</button>
+        </a>
+      </div>
+
+      {% endfor %} {% else %}
+
+      <p>Trash is empty.</p>
+
+      {% endif %}
+    </div>
+  </body>
+</html>

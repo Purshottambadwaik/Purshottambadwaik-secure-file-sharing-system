@@ -131,7 +131,8 @@ def dashboard():
 
     # Base query
     query = File.query.filter_by(
-        user_id=session['user_id']
+        user_id=session['user_id'],
+        is_deleted=False
     )
 
     # Apply search filter
@@ -309,36 +310,22 @@ def delete_file(filename):
     if 'user_id' not in session:
         return redirect('/login')
 
- # Current user's folder
-    user_folder = os.path.join(
-        UPLOAD_FOLDER,
-        f"user_{session['user_id']}"
-    )
-
-
-    # Full file path
-    file_path = os.path.join(user_folder, filename)
-
-        # Delete file if exists
-    if os.path.exists(file_path):
-
-        # Delete physical file
-        os.remove(file_path)
-
-    # Delete metadata from database
+    # Find file in database
     file_record = File.query.filter_by(
         filename=filename,
-        user_id=session['user_id']
+        user_id=session['user_id'],
+        is_deleted=False
     ).first()
 
+    # Move file to trash
     if file_record:
 
-        db.session.delete(file_record)
+        file_record.is_deleted = True
+
         db.session.commit()
 
+        flash("File moved to trash")
 
-
-    flash("File deleted successfully")
     return redirect('/dashboard')
 
 # Register Page
@@ -370,6 +357,97 @@ def register():
 
 with app.app_context():
     db.create_all()
+    
+    
+    # Trash Page
+@app.route('/trash')
+def trash():
+
+    # Check login
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    # Get trashed files
+    trashed_files = File.query.filter_by(
+        user_id=session['user_id'],
+        is_deleted=True
+    ).all()
+
+    return render_template(
+        'trash.html',
+        trashed_files=trashed_files,
+        get_file_icon=get_file_icon,
+        format_file_size=format_file_size
+    )
+    
+    # Restore File
+@app.route('/restore/<int:file_id>')
+def restore_file(file_id):
+
+    # Check login
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    # Find trashed file
+    file_record = File.query.filter_by(
+        id=file_id,
+        user_id=session['user_id'],
+        is_deleted=True
+    ).first()
+
+    # Restore file
+    if file_record:
+
+        file_record.is_deleted = False
+
+        db.session.commit()
+
+        flash("File restored successfully")
+
+    return redirect('/trash')
+
+# Permanent Delete
+@app.route('/permanent-delete/<int:file_id>')
+def permanent_delete(file_id):
+
+    # Check login
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    # Find file
+    file_record = File.query.filter_by(
+        id=file_id,
+        user_id=session['user_id'],
+        is_deleted=True
+    ).first()
+
+    if file_record:
+
+        # User folder
+        user_folder = os.path.join(
+            UPLOAD_FOLDER,
+            f"user_{session['user_id']}"
+        )
+
+        # File path
+        file_path = os.path.join(
+            user_folder,
+            file_record.filename
+        )
+
+        # Delete physical file
+        if os.path.exists(file_path):
+
+            os.remove(file_path)
+
+        # Delete DB record
+        db.session.delete(file_record)
+
+        db.session.commit()
+
+        flash("File permanently deleted")
+
+    return redirect('/trash')
     
 if __name__ == '__main__':
     app.run(debug=True)

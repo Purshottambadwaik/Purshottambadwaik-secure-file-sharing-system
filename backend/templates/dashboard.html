@@ -19,6 +19,14 @@
       <div class="top-navbar">
         <h2>Secure File Sharing System</h2>
 
+
+          <a href="/trash">
+
+      <button class="trash-btn">
+          Trash
+      </button>
+
+  </a>
         <a href="/logout">
           <button class="logout-top-btn">Logout</button>
         </a>
@@ -198,7 +206,10 @@
               <button type="button">Download</button>
             </a>
 
-            <a href="{{ url_for('delete_file', filename=file.filename) }}">
+            <a
+      href="/delete/{{ file.filename }}"
+      
+  >
               <button type="button" class="delete-btn">Delete</button>
             </a>
           </div>
