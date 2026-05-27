@@ -493,4 +493,21 @@ flex-wrap: wrap;
     margin-right: 10px;
 
     cursor: pointer;
+
+}
+.preview-btn {
+
+    background: #555;
+
+    color: white;
+
+    border: none;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    margin-right: 8px;
 }

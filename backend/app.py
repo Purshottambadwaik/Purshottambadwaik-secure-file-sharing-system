@@ -449,5 +449,26 @@ def permanent_delete(file_id):
 
     return redirect('/trash')
     
+    
+    # Preview Route
+@app.route('/preview/<filename>')
+def preview_file(filename):
+
+    # Check login
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    # User folder
+    user_folder = os.path.join(
+        UPLOAD_FOLDER,
+        f"user_{session['user_id']}"
+    )
+
+    # Send file for browser preview
+    return send_from_directory(
+        user_folder,
+        filename
+    )
+    
 if __name__ == '__main__':
     app.run(debug=True)
