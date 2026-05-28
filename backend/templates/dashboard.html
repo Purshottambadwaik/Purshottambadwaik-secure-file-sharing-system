@@ -12,7 +12,52 @@
   </head>
 
 <script>
+//for dark mode toggle
+/* Dark Mode Toggle */
 
+function toggleDarkMode() {
+
+    document.body.classList.toggle(
+        "dark-mode"
+    );
+
+    // Save mode
+    if (
+        document.body.classList.contains(
+            "dark-mode"
+        )
+    ) {
+
+        localStorage.setItem(
+            "theme",
+            "dark"
+        );
+
+    } else {
+
+        localStorage.setItem(
+            "theme",
+            "light"
+        );
+    }
+}
+
+/* Load Saved Theme */
+
+window.onload = function() {
+
+    const savedTheme =
+        localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+
+        document.body.classList.add(
+            "dark-mode"
+        );
+    }
+}
+
+//for sharable link
 function showShareLink(token) {
 
     const shareUrl =
@@ -26,29 +71,97 @@ function showShareLink(token) {
     );
 }
 
+
+
+function toggleMenu() {
+
+    const menu =
+        document.getElementById("dropdownMenu");
+
+    menu.classList.toggle("show");
+}
+
+// Close when clicking outside
+
+window.onclick = function(event) {
+
+    if (!event.target.matches('.profile-btn')) {
+
+        const dropdowns =
+            document.getElementsByClassName(
+                "dropdown-menu"
+            );
+
+        for (let i = 0; i < dropdowns.length; i++) {
+
+            let openDropdown = dropdowns[i];
+
+            if (
+                openDropdown.classList.contains('show')
+            ) {
+
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+
+
 </script>
 
   <body>
     <div class="dashboard-container">
       <!-- Header -->
-      <!-- Top Navbar -->
-      <div class="top-navbar">
-        <h2>Secure File Sharing System</h2>
+     <!-- Top Navbar -->
+<div class="top-navbar">
 
+    <h2>
+        Secure File Sharing System
+    </h2>
 
-          <a href="/trash">
+    <div class="nav-buttons">
 
-      <button class="trash-btn">
-          Trash
-      </button>
+   
 
-  </a>
-        <a href="/logout">
-          <button class="logout-top-btn">Logout</button>
+    <!-- Profile Dropdown -->
+
+    <div class="profile-menu">
+
+        <button
+            class="profile-btn"
+            onclick="toggleMenu()"
+        >
+            👤
+        </button>
+
+        <div
+            class="dropdown-menu"
+            id="dropdownMenu"
+        >
+
+         <a href="/trash">
+            Trash
         </a>
 
-        
-      </div>
+            <a href="#">
+                Settings
+            </a>
+
+            <a href="#" onclick="toggleDarkMode()">
+                Dark Mode
+            </a>
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
 
       <!-- Welcome Section -->
       <div class="welcome-section">
