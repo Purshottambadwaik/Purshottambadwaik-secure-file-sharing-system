@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Admin Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <h1>
+            Admin Dashboard
+        </h1>
+
+        <a href="/dashboard">
+
+            <button>
+                Back to Dashboard
+            </button>
+
+        </a>
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <h2>
+                    {{ total_users }}
+                </h2>
+
+                <p>Total Users</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h2>
+                    {{ total_files }}
+                </h2>
+
+                <p>Total Files</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h2>
+                    {{ format_file_size(total_storage) }}
+                </h2>
+
+                <p>Total Storage</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

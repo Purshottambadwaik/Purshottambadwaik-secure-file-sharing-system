@@ -1,6 +1,7 @@
 from fileinput import filename
 from importlib.metadata import files
 import os
+import uuid
 
 from flask import Flask, render_template
 from backend.config.db_config import db
@@ -11,6 +12,7 @@ from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
+from backend.models.user_model import User
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
@@ -88,30 +90,47 @@ migrate = Migrate(app, db)
 def home():
     return render_template("index.html")
 
+
 # Login Page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
+    # If form submitted
     if request.method == 'POST':
 
         email = request.form['email']
         password = request.form['password']
 
-        # Find user by email
-        user = User.query.filter_by(email=email).first()
+        # Find user
+        user = User.query.filter_by(
+            email=email
+        ).first()
 
-        # Check password
-        if user and check_password_hash(user.password, password):
+        # Validate password
+        if user and check_password_hash(
+            user.password,
+            password
+        ):
 
+            # Store session
             session['user_id'] = user.id
             session['username'] = user.username
-            
+
+            # Admin redirect
+            if user.is_admin:
+
+                return redirect('/admin')
+
+            # Normal user
             return redirect('/dashboard')
 
         else:
+
             return "Invalid Email or Password"
 
-    return render_template("login.html")
+    # GET request
+    return render_template('login.html')
+
 
 #Dashboard Page
 @app.route('/dashboard')
@@ -270,10 +289,11 @@ def upload_file():
     
     # Save file metadata to database
     new_file = File(
-        filename=filename,
-        user_id=session['user_id'],
-        file_size=file_size
-    )
+    filename=filename,
+    user_id=session['user_id'],
+    file_size=file_size,
+    share_token=str(uuid.uuid4())
+)
 
     db.session.add(new_file)
     db.session.commit()
@@ -468,6 +488,70 @@ def preview_file(filename):
     return send_from_directory(
         user_folder,
         filename
+    )
+    
+    # Share Route
+@app.route('/share/<token>')
+def share_file(token):
+
+    # Find file by token
+    file_record = File.query.filter_by(
+        share_token=token,
+        is_deleted=False
+    ).first()
+
+    if not file_record:
+        return "Invalid share link"
+
+    # File owner's folder
+    user_folder = os.path.join(
+        UPLOAD_FOLDER,
+        f"user_{file_record.user_id}"
+    )
+
+    # Open file in browser
+    return send_from_directory(
+        user_folder,
+        file_record.filename
+    )
+    
+    # Admin Dashboard
+@app.route('/admin')
+def admin_dashboard():
+
+    # Check login
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    # Current user
+    current_user = User.query.get(
+        session['user_id']
+    )
+
+    # Allow only admins
+    if not current_user.is_admin:
+
+        return "Access Denied"
+
+    # Analytics
+    total_users = User.query.count()
+
+    total_files = File.query.count()
+
+    total_storage = db.session.query(
+        db.func.sum(File.file_size)
+    ).scalar()
+
+    # Handle empty storage
+    if total_storage is None:
+        total_storage = 0
+
+    return render_template(
+        'admin.html',
+        total_users=total_users,
+        total_files=total_files,
+        total_storage=total_storage,
+        format_file_size=format_file_size
     )
     
 if __name__ == '__main__':

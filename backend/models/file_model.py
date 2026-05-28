@@ -1,5 +1,6 @@
 from datetime import datetime
 import pytz
+import uuid
 from backend.config.db_config import db
 
 # IST timezone
@@ -34,6 +35,11 @@ class File(db.Model):
     db.Boolean,
     default=False
 )
+    
+    share_token = db.Column(
+        db.String(100),
+        nullable=True
+    )
     
 
     def __repr__(self):

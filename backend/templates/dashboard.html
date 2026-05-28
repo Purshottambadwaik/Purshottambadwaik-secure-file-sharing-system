@@ -11,6 +11,22 @@
     />
   </head>
 
+<script>
+
+function showShareLink(token) {
+
+    const shareUrl =
+        window.location.origin +
+        "/share/" +
+        token;
+
+    prompt(
+        "Copy this share link:",
+        shareUrl
+    );
+}
+
+</script>
 
   <body>
     <div class="dashboard-container">
@@ -30,6 +46,8 @@
         <a href="/logout">
           <button class="logout-top-btn">Logout</button>
         </a>
+
+        
       </div>
 
       <!-- Welcome Section -->
@@ -218,12 +236,18 @@
               <button type="button">Download</button>
             </a>
 
+          <button
+              class="share-btn"
+              onclick="showShareLink('{{ file.share_token }}')"
+          >
+              Share
+          </button>
+
             <a
-      href="/delete/{{ file.filename }}"
-      
-  >
+      href="/delete/{{ file.filename }}"  >
               <button type="button" class="delete-btn">Delete</button>
             </a>
+
           </div>
         </div>
 
