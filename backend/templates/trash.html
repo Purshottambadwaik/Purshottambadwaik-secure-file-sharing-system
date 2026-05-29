@@ -9,6 +9,8 @@
     />
   </head>
 
+
+
   <body>
     <div class="dashboard-container">
       <h1>Trash</h1>
@@ -45,4 +47,20 @@
       {% endif %}
     </div>
   </body>
+<script>
+
+
+
+    const savedTheme =
+        localStorage.getItem("theme");
+
+    if(savedTheme === "dark") {
+
+        document.body.classList.add(
+            "dark-mode"
+        );
+    }
+
+
+</script>
 </html>

@@ -610,8 +610,8 @@ input[type="file"] {
 
     cursor: pointer;
 }
-/* Profile Button */
 
+/* Profile Button */
 .profile-btn {
 
     width: 54px;
@@ -640,7 +640,6 @@ input[type="file"] {
 }
 
 /* Profile Menu */
-
 .profile-menu {
 
     position: relative;
@@ -657,10 +656,7 @@ input[type="file"] {
 }
 
 /* Dropdown */
-
 .dropdown-menu {
-
-
     display: none;
 
     position: absolute;
@@ -1335,4 +1331,32 @@ input[type="file"] {
 .dark-mode .search-sort-container {
 
     padding-top: 10px;
+}
+
+/***************************
+ TRASH PAGE DARK MODE
+***************************/
+
+.dark-mode .dashboard-container h1 {
+
+    color: #f8fafc;
+}
+
+.dark-mode .dashboard-container p {
+
+    color: #cbd5e1;
+}
+
+.dark-mode .file-card {
+
+    background: rgba(30, 41, 59, 0.75) !important;
+
+    border: 1px solid rgba(255,255,255,0.08) !important;
+
+    color: white !important;
+}
+
+.dark-mode .file-card h3 {
+
+    color: white;
 }
