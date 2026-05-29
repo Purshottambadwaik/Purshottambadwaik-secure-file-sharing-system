@@ -13,15 +13,18 @@
 
 <script>
 //for dark mode toggle
-/* Dark Mode Toggle */
-
+//togle dark mode
 function toggleDarkMode() {
 
     document.body.classList.toggle(
         "dark-mode"
     );
 
-    // Save mode
+    const themeText =
+        document.getElementById(
+            "themeToggleText"
+        );
+
     if (
         document.body.classList.contains(
             "dark-mode"
@@ -33,12 +36,18 @@ function toggleDarkMode() {
             "dark"
         );
 
+        themeText.innerText =
+            "Light Mode";
+
     } else {
 
         localStorage.setItem(
             "theme",
             "light"
         );
+
+        themeText.innerText =
+            "Dark Mode";
     }
 }
 
@@ -49,11 +58,24 @@ window.onload = function() {
     const savedTheme =
         localStorage.getItem("theme");
 
+    const themeText =
+        document.getElementById(
+            "themeToggleText"
+        );
+
     if (savedTheme === "dark") {
 
         document.body.classList.add(
             "dark-mode"
         );
+
+        themeText.innerText =
+            "Light Mode";
+
+    } else {
+
+        themeText.innerText =
+            "Dark Mode";
     }
 }
 
@@ -105,12 +127,11 @@ window.onclick = function(event) {
         }
     }
 }
-
-
 </script>
 
+   <!--body of page starts here -->
   <body>
-    <div class="dashboard-container">
+    
       <!-- Header -->
      <!-- Top Navbar -->
 <div class="top-navbar">
@@ -147,9 +168,11 @@ window.onclick = function(event) {
                 Settings
             </a>
 
-            <a href="#" onclick="toggleDarkMode()">
-                Dark Mode
-            </a>
+            <a href="#"
+    onclick="toggleDarkMode()"
+    id="themeToggleText">
+      Dark Mode
+  </a>
 
             <a href="/logout">
                 Logout
@@ -162,6 +185,9 @@ window.onclick = function(event) {
 </div>
 
 </div>
+
+<!-- Actual Dashbord start here -->
+<div class="dashboard-container">
 
       <!-- Welcome Section -->
       <div class="welcome-section">
@@ -368,4 +394,14 @@ window.onclick = function(event) {
       </div>
     </div>
   </body>
+
+  <!-- Footer -->
+
+<footer class="footer">
+
+    © 2026 Secure File Sharing System
+    <br>
+    Made by Puru
+
+</footer>
 </html>

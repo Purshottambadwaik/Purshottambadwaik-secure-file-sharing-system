@@ -142,7 +142,15 @@ button:hover {
     margin-top: 40px;
 }
 
-/* Navbar */
+
+
+
+/* =========================
+   NAVBAR
+========================= */
+/* =========================
+   CLEAN NAVBAR
+========================= */
 
 .top-navbar {
 
@@ -154,24 +162,32 @@ button:hover {
 
     align-items: center;
 
-    background: white;
+    padding: 20px 50px;
 
-    padding: 22px 35px;
+    background: transparent;
 
-    border-radius: 20px;
+    position: sticky;
 
-    margin-bottom: 35px;
+    top: 0;
+
+    z-index: 9999;
 
     box-sizing: border-box;
 }
+
+/* Navbar Title */
 
 .top-navbar h2 {
 
     font-size: 42px;
 
-    color: #222;
+    color: #111827;
 
     margin: 0;
+
+    font-weight: 700;
+
+    letter-spacing: -1px;
 }
 
 /* Right Side */
@@ -185,7 +201,6 @@ button:hover {
     gap: 15px;
 }
 
-
 /* Top Logout Button */
 .logout-top-btn {
     background: #dc3545;
@@ -197,7 +212,8 @@ button:hover {
 
 /* Welcome Section */
 .welcome-section {
-    margin-bottom: 40px;
+    margin-top: 40px;
+    margin-bottom: 50px;
 }
 
 .welcome-section h1 {
@@ -221,6 +237,8 @@ button:hover {
     gap: 25px;
 
     flex-wrap: wrap;
+
+    margin-bottom: 35px;
 }
 
 .upload-box input {
@@ -309,14 +327,20 @@ input[type="file"] {
 }
 
 /* Search Form */
+
 .search-form {
+
     display: flex;
 
     gap: 15px;
 
-    margin-bottom: 30px;
+    margin-top: 25px;
+
+    margin-bottom: 40px;
+
     align-items: center;
-flex-wrap: wrap;
+
+    flex-wrap: wrap;
 }
 
 .search-form input {
@@ -330,6 +354,33 @@ flex-wrap: wrap;
 
     font-size: 15px;
 }
+
+/* Search + Sort Section */
+
+.search-sort-container {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 30px;
+
+    margin-bottom: 40px;
+
+    padding: 5px 0;
+}
+/* Better Search Width */
+
+.search-bar {
+
+    flex: 1;
+
+    min-width: 250px;
+}
+
+
 .file-meta {
 
     display: flex;
@@ -595,9 +646,20 @@ flex-wrap: wrap;
     position: relative;
 }
 
+.profile-btn {
+
+    transition: 0.3s ease;
+}
+
+.profile-btn:hover {
+
+    transform: scale(1.08);
+}
+
 /* Dropdown */
 
 .dropdown-menu {
+
 
     display: none;
 
@@ -618,6 +680,11 @@ flex-wrap: wrap;
     overflow: hidden;
 
     z-index: 9999;
+
+    .dropdown-menu {
+
+    transition: 0.3s ease;
+}
 }
 
 .dropdown-menu a {
@@ -645,50 +712,98 @@ flex-wrap: wrap;
     display: block;
 }
 
+/* Premium Hover */
+
+.stat-card,
+.recent-section,
+.upload-box {
+   margin-bottom: 35px;
+    transition: 0.3s ease;
+}
+
+.stat-card:hover,
+.recent-section:hover,
+.upload-box:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,0.08);
+}
+
+/* Footer */
+
+.footer {
+
+    text-align: center;
+
+    margin-top: 60px;
+
+    padding: 30px 0;
+
+    color: #666;
+
+    font-size: 15px;
+}
+
+/* Dark Mode Footer */
+
+.dark-mode .footer {
+
+    color: #cbd5e1;
+}
+
 /* =========================
    MOBILE RESPONSIVE DESIGN
 ========================= */
 
 @media (max-width: 768px) {
 
+    /* Mobile Search Section */
+
+.search-form,
+.search-sort-container {
+
+    flex-direction: column;
+
+    align-items: stretch;
+}
 
 
 /* Mobile Navbar */
+
 .top-navbar {
 
-    width: 100%;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    background: white;
-
-    padding: 22px 35px;
-
-    border-radius: 20px;
-
-    margin-bottom: 35px;
-
-    box-sizing: border-box;
+    padding: 18px 20px;
 }
 
 .top-navbar h2 {
 
-    font-size: 18px;
+    font-size: 28px;
 
-    line-height: 1.3;
-
-    max-width: 70%;
+    line-height: 1.2;
 }
 
-.nav-buttons {
+/* Mobile Profile */
 
-    display: flex;
+.profile-btn {
 
-    align-items: center;
+    width: 48px;
+
+    height: 48px;
+
+    font-size: 20px;
+}
+
+/* Mobile Dropdown */
+
+.dropdown-menu {
+
+    right: 0;
+
+    top: 70px;
+
+    min-width: 180px;
 }
 
 /* Profile Button */
@@ -706,11 +821,25 @@ flex-wrap: wrap;
 
 .dropdown-menu {
 
-    right: 0;
+    display: none;
 
-    top: 55px;
+    position: absolute;
 
-    min-width: 160px;
+    right: 5px;
+
+    top: 80px;
+
+    background: #0f172a;
+
+    border-radius: 14px;
+
+    min-width: 220px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+
+    overflow: hidden;
+
+    z-index: 99999;
 }
 
     body {
@@ -958,18 +1087,14 @@ flex-wrap: wrap;
     color: white;
 }
 
-/* Navbar */
+/* Dark Navbar */
 
 .dark-mode .top-navbar {
 
-    background: rgba(30, 41, 59, 0.55);
-
-    backdrop-filter: blur(12px);
-
-    border: 1px solid rgba(255,255,255,0.08);
+    background: transparent;
 }
 
-/* Navbar Title */
+/* Dark Navbar Title */
 
 .dark-mode .top-navbar h2 {
 
@@ -1197,4 +1322,17 @@ flex-wrap: wrap;
 .dark-mode .recent-item small {
 
     color: #e2e8f0;
+}
+
+/* Better Section Separation */
+
+.dark-mode .upload-box {
+
+    border:
+    1px solid rgba(255,255,255,0.06);
+}
+
+.dark-mode .search-sort-container {
+
+    padding-top: 10px;
 }
